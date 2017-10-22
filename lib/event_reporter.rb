@@ -4,7 +4,7 @@ require './lib/attendee'
 require './lib/cleaner'
 class EventReporter
 
-  attr_reader :attendees
+  attr_reader :attendees, :queue
 
   def initialize
     @attendees = []
@@ -19,6 +19,15 @@ class EventReporter
       line[:zipcode] = Cleaner.new.clean_zipcode(line[:zipcode])
       attendee = Attendee.new(line)
       @attendees << attendee
+    end
+  end
+
+  def find(attribute, criteria)
+    @attendees.each do |attendee|
+      if attendee.send(attribute).upcase.strip == criteria.upcase.strip
+        @queue << attendee
+      end
+
     end
   end
 end
