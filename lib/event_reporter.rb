@@ -27,7 +27,14 @@ class EventReporter
       if attendee.send(attribute).upcase.strip == criteria.upcase.strip
         @queue << attendee
       end
-
     end
+  end
+
+  def queue_count
+    @queue.count
+  end
+
+  def queue_clear
+    @queue.clear
   end
 end

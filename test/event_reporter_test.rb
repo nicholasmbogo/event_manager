@@ -66,4 +66,16 @@ class EventReporterTest < Minitest::Test
 
     assert_equal [], event.queue
   end
+
+  def test_has_count_at_queue
+    event = EventReporter.new
+
+    assert_equal 0, event.queue_count
+  end
+
+  def test_is_empty_when_it_Is_clear
+    event = EventReporter.new
+
+    assert_equal [], event.queue_clear
+  end
 end
