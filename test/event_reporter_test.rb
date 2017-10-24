@@ -1,3 +1,4 @@
+require 'pry'
 require 'minitest'
 require 'minitest/autorun'
 require 'minitest/pride'
@@ -67,6 +68,14 @@ class EventReporterTest < Minitest::Test
     assert_equal [], event.queue
   end
 
+  def test_can_find_all_Johns
+    event = EventReporter.new
+    event.loader("full_event_attendees.csv")
+    event.find("first_name", "John")
+
+    assert_equal 63, event.queue_count
+  end
+
   def test_has_count_at_queue
     event = EventReporter.new
 
@@ -77,5 +86,28 @@ class EventReporterTest < Minitest::Test
     event = EventReporter.new
 
     assert_equal [], event.queue_clear
+  end
+
+  def test_can_print_out_the_header
+    skip
+    event = EventReporter.new
+    event.loader("full_event_attendees.csv")
+    event.find("first_name", "John")
+
+    assert_equal  63, event.queue_count
+  end
+
+  def test_is_empty_when_it_Is_clear
+    event = EventReporter.new
+
+    assert_equal [], event.queue_clear
+  end
+
+  def test_can_print_queue
+    event = EventReporter.new
+    event.queue_print
+
+    #binding.pry
+    assert_equal "FIRST NAME LAST NAME EMAIL PHONE STREET CITY STATE ZIPCODE", event.queue_print
   end
 end
