@@ -6,6 +6,3 @@ contents = CSV.open 'full_event_attendees.csv', headers: true, header_converters
 
 puts contents.headers
 binding.pry
-# contents.each do |row|
-#   puts row[0]
-# end

@@ -103,11 +103,56 @@ class EventReporterTest < Minitest::Test
     assert_equal [], event.queue_clear
   end
 
-  def test_can_print_queue
+  def test_can_build_header_string
     event = EventReporter.new
-    event.queue_print
 
-    #binding.pry
-    assert_equal "FIRST NAME LAST NAME EMAIL PHONE STREET CITY STATE ZIPCODE", event.queue_print
+    assert_equal "FIRST NAME\tLAST NAME\tEMAIL\tPHONE\tSTREET\tCITY\tSTATE\tZIPCODE", event.header_string
+  end
+
+  def test_it_can_build_a_key_data_string
+    event = EventReporter.new
+    event.queue = [Attendee.new({
+      _: "1",
+      regdate: "1,11/12/08 10:47",
+      first_name: "Allison",
+      last_name: "Nguyen",
+      email_address: "arannon@jumpstartlab.com",
+      homephone: "6154385000",
+      street: "3155 19th St NW",
+      city: "Washington",
+      state: "DC",
+      zipcode: "20010"
+    })]
+    result = event.queue_data_string
+    assert_equal "Allison\tNguyen\tarannon@jumpstartlab.com\t6154385000\t3155 19th St NW\tWashington\tDC\t20010", result
+  end
+
+  def test_it_can_build_a_key_data_string_a_sorted_by_attribute
+    event = EventReporter.new
+    event.queue = [Attendee.new({
+      _: "1",
+      regdate: "1,11/12/08 10:47",
+      first_name: "Allison",
+      last_name: "Nguyen",
+      email_address: "arannon@jumpstartlab.com",
+      homephone: "6154385000",
+      street: "3155 19th St NW",
+      city: "Washington",
+      state: "DC",
+      zipcode: "20010"
+    }),Attendee.new({
+      _: "1",
+      regdate: "1,11/12/08 10:47",
+      first_name: "first",
+      last_name: "last",
+      email_address: "arannon@jumpstartlab.com",
+      homephone: "6154385000",
+      street: "3155 19th St NW",
+      city: "Washington",
+      state: "DC",
+      zipcode: "10010"
+    })]
+    result = event.queue_data_string("zipcode")
+    assert_equal "first\tlast\tarannon@jumpstartlab.com\t6154385000\t3155 19th St NW\tWashington\tDC\t10010", result.split("\n").first
   end
 end

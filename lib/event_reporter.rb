@@ -4,7 +4,8 @@ require './lib/attendee'
 require './lib/cleaner'
 class EventReporter
 
-  attr_reader :attendees, :queue
+  attr_reader :attendees
+  attr_accessor :queue
 
   def initialize
     @attendees = []
@@ -14,10 +15,10 @@ class EventReporter
   def loader(file = "full_event_attendees.csv")
     @attendees = []
     contents = CSV.open(file, headers: true, header_converters: :symbol)
-    #binding.pry
     contents.each do |line|
       line[:_] = line[0]
       line[:zipcode] = Cleaner.new.clean_zipcode(line[:zipcode])
+      line[:homephone] = Cleaner.new.home_phone(line[:homephone])
       attendee = Attendee.new(line)
       @attendees << attendee
     end
@@ -25,7 +26,8 @@ class EventReporter
 
   def find(attribute, criteria)
     @attendees.each do |attendee|
-      if attendee.send(attribute).upcase.strip == criteria.upcase.strip
+      attendee_attribute = attendee.send(attribute)
+      if attendee_attribute && attendee_attribute.upcase.strip == criteria.upcase.strip
         @queue << attendee
       end
     end
@@ -40,20 +42,50 @@ class EventReporter
     @queue.clear
   end
 
-  def queue_print
+  def header_string
     headers = [:first_name, :last_name, :email_address, :homephone, :street, :city, :state, :zipcode]
 
-    #contents.headers[2..9]
     headers.map do |header|
-      result = header.to_s.upcase.gsub("_", " ") + (" ") #refactor
-      #binding.pry
-      if result == "EMAIL ADDRESS "
-        result = "EMAIL "
-      elsif result == "HOMEPHONE "
-        result = "PHONE "
+      result = header.to_s.upcase.gsub("_", " ") + ("\t")
+      if result == "EMAIL ADDRESS\t"
+        result = "EMAIL\t"
+      elsif result == "HOMEPHONE\t"
+        result = "PHONE\t"
       else
         result
       end
-    end.join#(" ")
+    end.join.rstrip
+  end
+
+  def queue_data_string(attribute = nil)
+    if attribute
+      sorted = @queue.sort do |a, b|
+        a.send(attribute) <=> b.send(attribute)#sort the queue by comparing the attribute and send in the attribute
+      end
+
+    else
+      sorted = @queue
+    end
+    queue_string = sorted.map do |attendee|
+      "#{attendee.first_name}\t#{attendee.last_name}\t#{attendee.email_address}\t#{attendee.homephone}\t#{attendee.street}\t#{attendee.city}\t#{attendee.state}\t#{attendee.zipcode}"
+    end.join("\n")
+  end
+
+  def print_queue(attribute = nil)
+    puts header_string
+    puts queue_data_string(attribute)
+  end
+
+  def save_queue(filename)
+    CSV.open(filename, "w") do |csv|
+      csv << header_string.split("\t")
+      queue_data_string.split("\n").each do |attendee|
+        csv << attendee.split("\t")
+      end
+    end
   end
 end
+event = EventReporter.new
+event.loader
+event.find("state", "DC")
+event.save_queue("my_csv.csv")
