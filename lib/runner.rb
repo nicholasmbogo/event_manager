@@ -17,7 +17,7 @@ class Runner
 
        if @choice == "help"
          puts "Available commands:\n<load <filename>>\n<find <attribute> <criteria>>\n<queue count>\n<queue clear>\n<queue print>\n<queue print by <attribute>>\n<queue save to <filename.csv>>\n<queue export html <filename.csv>>"
-         
+
        elsif @choice == "help save to"
          puts @help.help_queue_save
        elsif @choice == "help queue count"
@@ -25,9 +25,9 @@ class Runner
        elsif @choice == "queue find"
          puts @help.help_find
        elsif @choice == "queue clear"
-         puts @help.queue_clear
+         puts @help.help_queue_clear
        elsif @choice == "queue print"
-         puts @help.queue_print
+         puts @help.help_queue_print
        elsif @choice == "queue print by"
          puts @help.help_queue_print_by
        end
@@ -66,6 +66,7 @@ class Runner
         end
       end
     end
+    puts "Farewell, Thanks for Visit Event Reporter. Bye, Nicholas!!"
   end
 end
 
