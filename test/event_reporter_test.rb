@@ -106,7 +106,7 @@ class EventReporterTest < Minitest::Test
   def test_can_build_header_string
     event = EventReporter.new
 
-    assert_equal "FIRST NAME\tLAST NAME\tEMAIL\tPHONE\tSTREET\tCITY\tSTATE\tZIPCODE", event.header_string
+    assert_equal "FIRST\tNAME\tLAST\tNAME\tEMAIL\tPHONE\tSTREET\tCITY\tSTATE\tZIPCODE", event.header_string
   end
 
   def test_it_can_build_a_key_data_string

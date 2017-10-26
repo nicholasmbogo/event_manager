@@ -1,0 +1,43 @@
+<html>
+<head>
+<style>
+table {
+   front_family: arial, sans-serif;
+   border-collapse: collapse;
+   width: 100%;
+}
+
+td, th {
+   border: 1px solid #dddddd;
+   text-align: left;
+   padding: 8px
+
+ }
+
+ </style>
+ </head>
+ <table>
+   <thead>
+     <th>first_name</th>
+     <th>last_name</th>
+     <th>Email Address</th>
+     <th>Home Phone</th>
+     <th>Street</th>
+     <th>City</th>
+     <th>State</th>
+     <th>Zipcode</th>
+   <thead>
+     <% @attendees.each do |attendee| %>
+     <td><%= attendee.first_name%></td>
+     <td><%= attendee.last_name%></td>
+     <td><%= attendee.email_address%></td>
+     <td><%= attendee.homephone%></td>
+     <td><%= attendee.street%></td>
+     <td><%= attendee.city%></td>
+     <td><%= attendee.state%></td>
+     <td><%= attendee.zipcode%></td>
+   </tr>
+   <% end %>
+
+ </table>
+ </html>

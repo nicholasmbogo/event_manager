@@ -2,6 +2,8 @@ require 'pry'
 require 'csv'
 require './lib/attendee'
 require './lib/cleaner'
+require 'erb'
+
 class EventReporter
 
   attr_reader :attendees
@@ -84,6 +86,25 @@ class EventReporter
       end
     end
   end
+
+
+  def queue_export_html(filename)
+    #headers = [:first_name, :last_name, :homephone, :email_address, :street, :city, :state, :zipcode]
+    #contents = CSV.open(csv, headers: true, header_converters: :symbol)
+    template_letter = File.read("template.erb")
+    erb_letter      = ERB.new(template_letter)
+    form_letter = erb_letter.result(binding)
+    #binding.pry
+      Dir.mkdir("html") unless Dir.exists?("html")
+      file = "html/#{filename}"
+
+
+      File.open(file, "w") do |file|
+        file.puts form_letter
+      end
+  end
+
+
 end
 event = EventReporter.new
 event.loader

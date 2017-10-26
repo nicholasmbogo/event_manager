@@ -33,13 +33,19 @@ class Runner
       elsif split[0] == "queue" && split[1] == "print"
         if split[2]
           event_repo.print_queue(split[3])
+        end
 
+      elsif split[0] == "queue" && split[1] == "export" && split[2] == "html" && split[3]
+        if split[3]
+          event_repo.queue_export_html(split[3])
         else
           event_repo.print_queue
         end
       end
+
     end
   end
 end
+
 runner = Runner.new
 runner.start_game
