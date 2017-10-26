@@ -89,12 +89,9 @@ class EventReporter
 
 
   def queue_export_html(filename)
-    #headers = [:first_name, :last_name, :homephone, :email_address, :street, :city, :state, :zipcode]
-    #contents = CSV.open(csv, headers: true, header_converters: :symbol)
     template_letter = File.read("template.erb")
     erb_letter      = ERB.new(template_letter)
     form_letter = erb_letter.result(binding)
-    #binding.pry
       Dir.mkdir("html") unless Dir.exists?("html")
       file = "html/#{filename}"
 
